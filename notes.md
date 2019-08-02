@@ -3,7 +3,7 @@
 ## Important
 + time interval (`startTimeMillis` and `endTimeMillis`) has to be in nano secoconds (mili * 1000)
 + Access for API ``https://www.googleapis.com/auth/fitness.location.read`` has to be granted
-<br/> ![Alt-Text](https://i.imgur.com/hdd4Bs4.png "optionaler Titel")
+<br/> ![apis](https://i.imgur.com/hdd4Bs4.png "apis")
 
 ## Examples
 
@@ -11,16 +11,18 @@
 provides kilometers from 29.07 - 01.08.
 
 #### Request
-+ ``POST``
++ HTTP Method: ``POST``
++ Request URI: ``https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate``
 ````
 {
   "aggregateBy": [{
     "dataTypeName": "com.google.step_count.delta",
     "dataSourceId": "derived:com.google.distance.delta:com.google.android.gms:merge_distance_delta"
   }],
+  
   "bucketByTime": { "durationMillis": 86400000}, //interval: day / 24h
   "startTimeMillis": 1564272000000,
-  "endTimeMillis": 1564617600000
+  "endTimeMillis": 1564704000000
 }
 ````
 
