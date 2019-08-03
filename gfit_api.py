@@ -1,6 +1,6 @@
 import requests
 import json
-from utils import get_config
+from utils import get_config, ApiException
 
 
 def get_user_distance_interval(start_timestamp, end_timestamp, user='me'):
@@ -40,7 +40,13 @@ def get_user_distance_interval(start_timestamp, end_timestamp, user='me'):
                              data=body_json,
                              headers=headers)
 
-    return response.json()
+    # handle results
+    if response.status_code == 200:
+        return extract_relevant_data(response.json())
+    elif response.status_code == 401:
+        raise ApiException(response.status_code, 'Invalid access token for user \'' + user + '\'')
+    else:
+        raise ApiException(response.status_code, 'Undefined Exception')
 
 
 def extract_relevant_data(result):
@@ -57,6 +63,6 @@ def extract_relevant_data(result):
 if __name__ == '__main__':
 
     response_json = get_user_distance_interval(1564272000, 1564704000)
-    
+
     for day in extract_relevant_data(response_json):
         print(day)
