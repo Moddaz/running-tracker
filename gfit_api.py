@@ -20,7 +20,7 @@ def get_user_distance_interval(start_timestamp, end_timestamp, user='me'):
     # prepare headers
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + config['TOKENS']['janek']
+        'Authorization': config['API']['authorization_type'] + ' ' + config['TOKENS']['janek']
     }
 
     # prepare POST Request body
@@ -43,7 +43,20 @@ def get_user_distance_interval(start_timestamp, end_timestamp, user='me'):
     return response.json()
 
 
+def extract_relevant_data(result):
+    """
+    extracts the interval and distance from all entries of the requested data
+    :param result: response result in json format
+    :return: list of dictionaries with start_timestamp, end_timestamp and distance
+    """
+    return [{'start_timestamp': int(entry['startTimeMillis']) / 1000,
+             'end_timestamp': int(entry['endTimeMillis']) / 1000,
+             'distance': entry['dataset'][0]['point'][0]['value'][0]['fpVal']} for entry in result['bucket']]
+
+
 if __name__ == '__main__':
 
-    result = get_user_distance_interval(1564272000, 1564704000)
-    print(result)
+    response_json = get_user_distance_interval(1564272000, 1564704000)
+    
+    for day in extract_relevant_data(response_json):
+        print(day)
