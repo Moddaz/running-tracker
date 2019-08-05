@@ -1,7 +1,7 @@
 from flask import Flask, make_response, jsonify
 from flask_httpauth import HTTPBasicAuth
 from gfit_api import get_user_distance_interval
-from utils import get_config, ApiException
+from utils import get_config, ApiException, get_week_frame
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
@@ -11,7 +11,14 @@ auth = HTTPBasicAuth()
 # @auth.login_required
 def hello_world():
     try:
-        return str(get_user_distance_interval(1564272000, 1564704000))
+
+        week_frame = get_week_frame()
+        result = get_user_distance_interval(week_frame[0], week_frame[1])
+        # start_date = datetime.fromtimestamp(day['start_timestamp'])
+        # print(start_date.strftime('%A: %d, %b') + ' | ' + str(day['distance']))
+
+        return str(result)
+
     except ApiException as e:
         return make_response(jsonify({'error': e.message}), e.code)
 

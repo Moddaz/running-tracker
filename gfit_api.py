@@ -57,7 +57,8 @@ def extract_relevant_data(result):
     """
     return [{'start_timestamp': int(entry['startTimeMillis']) / 1000,
              'end_timestamp': int(entry['endTimeMillis']) / 1000,
-             'distance': entry['dataset'][0]['point'][0]['value'][0]['fpVal']} for entry in result['bucket']]
+             'distance': entry['dataset'][0]['point'][0]['value'][0]['fpVal'] if len(entry['dataset'][0]['point']) > 0 else 0}
+            for entry in result['bucket']]
 
 
 if __name__ == '__main__':
