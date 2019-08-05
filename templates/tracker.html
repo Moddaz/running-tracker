@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Running Tracker</title>
+</head>
+<body>
+{% if week_start and week_end %}
+  <h1>Woche vom {{ week_start }} bis zum {{ week_end }}:</h1>
+{% else %}
+  <h1>Woche: Fehler</h1>
+{% endif %}
+
+{% if km_target %}
+  <p>Ziel: <b>{{ km_target }}km</b></p>
+{% else %}
+  <p>Ziel: ?</p>
+{% endif %}
+
+{% if table %}
+  {{ table }}
+{% else %}
+  <p>Fehler beim Laden der Daten</p>
+{% endif %}
+</body>
+</html>

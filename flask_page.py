@@ -1,10 +1,16 @@
-from flask import Flask, make_response, jsonify
+from flask import Flask, make_response, jsonify, render_template
 from flask_httpauth import HTTPBasicAuth
+
+from data_processing import create_table
 from gfit_api import get_user_distance_interval
 from utils import get_config, ApiException, get_week_frame
+from flask_table import Table, Col
+
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
+config = get_config()
+DATE_FORMAT = '%d. %B'
 
 
 @app.route('/')
@@ -13,11 +19,17 @@ def hello_world():
     try:
 
         week_frame = get_week_frame()
-        result = get_user_distance_interval(week_frame[0], week_frame[1])
-        # start_date = datetime.fromtimestamp(day['start_timestamp'])
-        # print(start_date.strftime('%A: %d, %b') + ' | ' + str(day['distance']))
+        users = ['Janek']
+        data = [{'user': user, 'days': get_user_distance_interval(week_frame[0].timestamp().__round__(),
+                                                                  week_frame[1].timestamp().__round__())} for user in users]
 
-        return str(result)
+        table = create_table(data)
+
+        return render_template('tracker.html',
+                               week_start=week_frame[0].strftime(DATE_FORMAT),
+                               week_end=week_frame[1].strftime(DATE_FORMAT),
+                               km_target=config['CHALLENGE']['start_kilometers'],
+                               table=table)
 
     except ApiException as e:
         return make_response(jsonify({'error': e.message}), e.code)
@@ -32,7 +44,6 @@ def not_found(error):
 # securing
 @auth.get_password
 def get_password(username):
-    config = get_config()
     if username == config['PAGE']['username']:
         return config['PAGE']['password']
     return None

@@ -28,8 +28,8 @@ def get_config(config_path='config.ini'):
 
 def get_week_frame():
     """
-    returns list of week start and end
-    :return: timestamp list
+    returns tupel of week start and end
+    :return: datetime tupel
     """
     now = datetime.now()
 
@@ -42,4 +42,4 @@ def get_week_frame():
                                minutes=59 - now.minute,
                                seconds=59 - now.second)
 
-    return week_start.timestamp().__round__(), week_end.timestamp().__round__()
+    return week_start, week_end
