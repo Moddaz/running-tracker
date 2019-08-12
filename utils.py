@@ -43,3 +43,23 @@ def get_week_frame():
                                seconds=59 - now.second)
 
     return week_start, week_end
+
+
+def get_week_kilometers():
+    """
+    returns the current weeks kilometer goal
+    :return: int kilometers
+    """
+    config = get_config()
+
+    now = datetime.now()
+    challenge_start = datetime.fromtimestamp(int(config['CHALLENGE']['start_timestamp']))
+    monday_current_week = now - timedelta(days=now.weekday())
+    monday_challenge_start = challenge_start - timedelta(days=challenge_start.weekday())
+
+    passed_weeks = int((monday_current_week - monday_challenge_start).days / 7)
+    return int(config['CHALLENGE']['start_kilometers']) + passed_weeks
+
+
+if __name__ == '__main__':
+    print(get_week_kilometers())

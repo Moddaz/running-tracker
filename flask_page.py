@@ -3,7 +3,7 @@ from flask_httpauth import HTTPBasicAuth
 
 from data_processing import create_table
 from gfit_api import get_user_distance_interval
-from utils import get_config, ApiException, get_week_frame
+from utils import get_config, ApiException, get_week_frame, get_week_kilometers
 from flask_table import Table, Col
 
 
@@ -28,7 +28,7 @@ def hello_world():
         return render_template('tracker.html',
                                week_start=week_frame[0].strftime(DATE_FORMAT),
                                week_end=week_frame[1].strftime(DATE_FORMAT),
-                               km_target=config['CHALLENGE']['start_kilometers'],
+                               km_target=get_week_kilometers(),
                                table=table)
 
     except ApiException as e:
